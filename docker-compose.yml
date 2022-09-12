@@ -1,0 +1,36 @@
+version: '3'
+services:
+  laravel-book:
+    build: ./
+    container_name: laravel-book
+    ports:
+      - 80:80
+    volumes:
+      - ./:/var/www/app
+    working_dir: /var/www/app
+  mysql-book:
+    image: mysql:8.0
+    platform: linux/amd64
+    container_name: mysql-book
+    ports:
+      - 3300:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: database
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+  phpmyadmin-book:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin-book
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=mysql-book
+      # _9.10.1
+      - PMA_USER=user
+      - PMA_PASSWORD=user
+    links:
+      - mysql-book
+    ports:
+      - 8080:80
+    volumes:
+      - /sessions
